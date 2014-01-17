@@ -1,13 +1,15 @@
 #!/usr/bin/python
 # -*- coding: utf8 -*-
 
-from bs4 import BeautifulSoup as Soup
 import re
-import requests
-from datetime import *
-import functions
 import time
 from time import mktime
+
+from bs4 import BeautifulSoup as Soup
+
+import requests
+from scrapers import functions
+
 
 def holidays(year):
     url = "http://www.kalender-365.dk/helligdage/%s.html" % (year)
@@ -47,10 +49,12 @@ def holidays(year):
         groups = dayProg.search(unicode(elements[0].find("span").text))
 
         days.append({
-            "date" : str(mktime(time.strptime("%s %s %s" % (functions.zeroPadding(groups.group("day")), months[groups.group("month")], year),"%d %m %Y")))[:-2],
+            "date" : str(mktime(time.strptime("%s %s %s" % (
+            functions.zeroPadding(groups.group("day")), months[groups.group("month")], year),"%d %m %Y")))[:-2],
             "title" : unicode(elements[2].find("a").text).replace(" %s" % (year),""),
             "link" : elements[2].find("a")["href"],
-            "year" : year
+            "year" : year,
+            "country" : "da-DK"
         })
 
     return {
